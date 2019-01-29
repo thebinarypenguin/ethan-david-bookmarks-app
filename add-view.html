@@ -9,7 +9,10 @@
 </head>
 <body>
   <main class='container'>
-    <section class="controls">
+    <div class="error-container">
+      <p>BIG UGLY ERROR</p>
+    </div>
+    <section class="controls flex">
       <form action="" class="new-bookmark-button">
         <button class="js-new-item">New</button>
       </form>
@@ -30,25 +33,31 @@
     </section>
     <section class="new-bookmark-form">
       <form action="" class="new-bookmark-form">
-        <div>
-        <label for="bookmark-title">Title</label>
-        <input type="text" name="title" id="new-bookmark-title">
-        <label for="bookmark-name">URL</label>
-        <input type="url" name="url" id="new-bookmark-url">
-        <label for="bookmark-title">Description</label>
-        <textarea type="text" name="description" id="new-bookmark-description"></textarea>
-        <label for="bookmark-rating">Rating</label>
-        <select name="" id="new-bookmark-rating">
-            <option value=""></option>
-            <option value="1">★☆☆☆☆</option>
-            <option value="2">★★☆☆☆</option>
-            <option value="3">★★★☆☆</option>
-            <option value="4">★★★★☆</option>
-            <option value="5">★★★★★</option>
-          </select>
+        <div class="flex form-container">
+          <div class="left-form">
+            <label for="bookmark-title">Title</label>
+            <input type="text" name="title" id="new-bookmark-title">
+            <label for="bookmark-name">URL</label>
+            <input type="url" name="url" id="new-bookmark-url">
+         </div>
+         <div class="right-form">
+            <label for="bookmark-title">Description</label>
+            <textarea type="text" name="description" id="new-bookmark-description"></textarea>
+            <label for="bookmark-rating">Rating</label>
+            <select name="" id="new-bookmark-rating">
+                <option value=""></option>
+                <option value="1">★☆☆☆☆</option>
+                <option value="2">★★☆☆☆</option>
+                <option value="3">★★★☆☆</option>
+                <option value="4">★★★★☆</option>
+                <option value="5">★★★★★</option>
+            </select>
+          </div>
         </div>
-        <button id="cancel-add">Cancel</button>
-        <button type="submit" id="save-item">Save</button>
+        <div class="flex button-container">
+          <button id="cancel-add">Cancel</button>
+          <button type="submit" id="save-item">Save</button>
+        </div>
       </form>
     </section>
     <section class="list">
@@ -61,7 +70,7 @@
           </div>
           <p class="bookmark-description">Lorem psum dolor sit amet, consectetur adpisicing elit. anullla qualm velit, vulpatate 
             es pharateta nec, mattis ac neque..</p>
-          <div class="visit-site-container">
+          <div class="site-link-container flex">
             <a href="www.google.com" class="fake-button">Visit Site</a>
           </div>
         </li>

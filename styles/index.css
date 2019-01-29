@@ -1,0 +1,76 @@
+*{
+  box-sizing: border-box;
+}
+
+.container{
+  max-width: 768px;
+  margin: auto;
+}
+
+.make-button{
+  appearance: button;
+}
+
+ul{
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+li{
+  margin-bottom: 2rem;
+}
+
+p{
+  margin: 0px;
+}
+
+.flex{
+  display: flex;
+}
+
+.controls{
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-link-container{
+  flex-direction: row-reverse;
+}
+
+.bookmark-description, .bookmark-rating{
+  padding-left: 2rem;
+}
+
+.checkbox{
+  margin-right: 1rem;
+}
+
+textarea{
+  resize: none;
+}
+
+.left-form, .right-form{
+  padding: 1rem;
+}
+
+.left-form input, left-form label{
+  width: 100%;
+  flex-grow: 1;
+}
+
+.right-form select, .right-form textarea, .right-form label{
+  width: 100%;
+  flex-grow: 1;
+}
+
+.button-container{
+  justify-content: center;
+}
+
+.button-container button{
+  margin: 0 .5rem;
+}
+
+.error-container, .container, .new-bookmark-form{
+  border: 1px solid black;
+}
