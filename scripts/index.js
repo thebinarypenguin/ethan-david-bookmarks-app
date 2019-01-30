@@ -54,33 +54,68 @@ const render = function () {
   switch (state.view) {
 
   case 'add':
-    renderAdd();
+    renderAdd(filteredArray);
     break;
 
   case 'delete':
-    renderDelete();
+    renderDelete(filteredArray);
     break;
 
   default:
-    renderInitial();
+    renderInitial(filteredArray);
     break;
   }
 
 };
 
-const renderInitial = function () {
+function generateListHtml(bookmarks){
+  return state.bookmarks.map(bookmark => {
+    return `
+    <li class="bookmark">
+          <div>
+            <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}"><strong>${bookmark.title}</strong>
+          <div>
+          <div class="bookmark-rating">
+              Rating: ${bookmark.rating}
+          </div>
+          <input type="button" class="view-details" value="View details">
+          <div class="description-container">
+          </div>
+        </li>
+    `;
+  });
+}
 
-  console.log('Initial View', state);
+function generateExpandedHtml(bookmark){
+  return `
+  <li class="bookmark">
+    <div>
+      <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}"><strong>${bookmark.title}</strong>
+    <div>
+    <div class="bookmark-rating">
+        Rating: ${bookmark.rating}
+    </div>
+      <input type="button" class="hide-details" value="Hide details">
+      <p class="bookmark-description">${bookmark.description}</p>
+    <div class="site-link-container flex">
+      <a href="${bookmark.url}" class="fake-button">Visit Site</a>
+    </div>
+  </li>`;
+}
+
+const renderInitial = function (filteredState) {
+  $('.bookmarks-list').html(generateListHtml(state.bookmarks));
+  console.log('Initial View', filteredState);
 };
 
-const renderAdd = function () {
+const renderAdd = function (filteredState) {
 
-  console.log('Add View', state);
+  console.log('Add View', filteredState);
 };
 
-const renderDelete = function () {
+const renderDelete = function (filteredState) {
 
-  console.log('Delete View', state);
+  console.log('Delete View', filteredState);
 };
 
 
@@ -109,6 +144,7 @@ function handleSaveBookmark(){
     const url = $('#new-bookmark-url').val();
     const description = $('#new-bookmark-descrption').val();
     const rating = $('#new-bookmark-rating').val();
+
     console.log('saving new bookmark');
     // send POST request to API, then send GET request
   });
@@ -122,12 +158,11 @@ function handleCancelBookmark(){
 }
 
 
-function handleClickBookmark(){
-  $('.bookmarks-list').on('click', '.expand', function(event){
-    event.preventDefault();
-    expandBookmark();
-  });
-}
+// function handleClickBookmark(){
+//   $('.bookmarks-list').on('click', '.expand', function(event){
+//     event.preventDefault();
+//   });
+// }
 
 
 function handleCheckbox(){
@@ -144,25 +179,39 @@ function handleDelete(){
   });
 }
 
-function expandBookmark(){
-
+function handleViewDetails(){
+  $('.bookmarks-list').on('click', '.view-details', function(event){
+    event.preventDefault();
+    const cuid = $(event.target).closest('li').find('input').data('cuid');
+    const bookmark = state.bookmark.find(bookmark => bookmark.id === cuid);
+    bookmark.expanded = true;
+    console.log('showing details');
+    render();
+  });
 }
 
-function generateAddFormHtml(){
-
+function handleHideDetails(){
+  $('.bookmarks-list').on('click', '.hide-details', function(event){
+    event.preventDefault();
+    const cuid = $(event.target).closest('li').find('input').data('cuid');
+    const bookmark = state.bookmark.find(bookmark => bookmark.id === cuid);
+    bookmark.expanded = false;
+    console.log('hiding details');
+    render();
+  });
 }
-
-
-
 
 function main(){
+  render();
   handleNewItem();
   handleRatingFilter();
   handleCheckbox();
-  handleClickBookmark();
+  // handleClickBookmark();
   handleDelete();
   handleSaveBookmark();
   handleCancelBookmark();
+  handleViewDetails();
+  handleHideDetails();
 }
 
 $(main);
