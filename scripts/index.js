@@ -18,6 +18,33 @@ let state = {
 
 };
 
+const populateState = function () {
+
+  api.getAllBookmarks()
+    .then((results) => {
+
+      const newState = [];
+
+      results.forEach(bookmark => {
+
+        newState.push({
+          id          : bookmark.id,
+          title       : bookmark.title,
+          url         : bookmark.url,
+          description : bookmark.desc,
+          rating      : bookmark,
+          expanded    : false,
+          selected    : false,
+        });
+      });
+
+      state.bookmarks = newState;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 const render = function () {
 
   switch (state.view) {
