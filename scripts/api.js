@@ -5,61 +5,77 @@ const api = (function() {
   const USER_NAME = 'ethan';
   const BASE_URI  = `https://thinkful-list-api.herokuapp.com/${USER_NAME}/bookmarks`;
 
-  const HEADERS = {
-    'Content-Type': 'application/json',
+  const request = function (uri, options) {
+
+    const defaultOptions = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const mergedOptions = Object.assign({}, defaultOptions, options);
+
+    let response = null;
+
+    return fetch(uri, mergedOptions)
+      .then((res) => {
+        // Save response object for later use
+        response = res;
+        return res;
+      })
+      .then((res) => {
+        // parse json
+        return res.json();
+      })
+      .then((data) => {
+        if (!response.ok) {
+          throw new Error(data.message);
+        }
+
+        return data;
+      });
   };
+
 
   const getAllBookmarks = function () {
 
-    return fetch(BASE_URI, {
-      headers: HEADERS,
-    })
-      .then((res) => { return res.json(); });
+    return request(BASE_URI, {});
   };
 
   const getBookmark = function (id) {
 
     // TODO sanity check id
 
-    return fetch(`${BASE_URI}/${id}`, {
-      headers: HEADERS,
-    })
-      .then((res) => { return res.json(); });
+    return request(`${BASE_URI}/${id}`, {});
   };
 
   const createBookmark = function (data) {
 
     // TODO sanity check data
 
-    return fetch(BASE_URI, {
+    return request(BASE_URI, {
       method: 'POST',
-      headers: HEADERS,
       body: JSON.stringify(data)
-    })
-      .then((res) => { return res.json(); });
+    });
   };
 
   const updateBookmark = function (id, data) {
 
     // TODO sanity check id and data
 
-    return fetch(`${BASE_URI}/${id}`, {
+    return request(`${BASE_URI}/${id}`, {
       method: 'PATCH',
-      headers: HEADERS,
       body: JSON.stringify(data),
-    })
-      .then((res) => { return res.json(); });
+    });
   };
 
   const destroyBookmark = function (id) {
 
     // TODO sanity check id
 
-    return fetch(`${BASE_URI}/${id}`, {
+    return request(`${BASE_URI}/${id}`, {
       method: 'DELETE',
-      headers: HEADERS,
-    })
-      .then((res) => { return res.json(); });
+    });
   };
 
 
