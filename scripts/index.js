@@ -48,22 +48,26 @@ const populateState = function () {
 
 const render = function () {
 
-  const filteredArray = state.bookmarks.filter(bookmark => parseInt(bookmark.rating, 10) >= state.minRating);
+  const filteredState = {
+    view      : state.view,
+    errors    : state.errors,
+    minRating : state.minRating,
+    bookmarks : state.bookmarks.filter(bookmark => parseInt(bookmark.rating, 10) >= state.minRating),
+  };
 
 
   switch (state.view) {
 
   case 'add':
-    renderAdd(filteredArray);
-
+    renderAdd(filteredState);
     break;
 
   case 'delete':
-    renderDelete(filteredArray);
+    renderDelete(filteredState);
     break;
 
   default:
-    renderInitial(filteredArray);
+    renderInitial(filteredState);
     break;
   }
 
@@ -161,7 +165,15 @@ const renderAdd = function (filteredState) {
 
 const renderDelete = function (filteredState) {
 
-  console.log('Delete View', filteredState);
+  let count = 0;
+  filteredState.bookmarks.forEach((b) => {
+
+    if (b.selected === true) {
+      count++;
+    }
+  });
+
+  console.log('Delete View', `${count} selected`, filteredState);
 };
 
 
@@ -217,15 +229,18 @@ function handleCancelBookmark(){
 function handleCheckbox(){
   $('.bookmarks-list').on('click', '.checkbox', function(){
     const isChecked = $(event.target).prop('checked');
-    console.log(isChecked);
     const cuid = $(event.target).closest('li').find('input').data('cuid');
     const index = state.bookmarks.findIndex(bookmark => bookmark.id === cuid);
+
     state.bookmarks[index].selected = isChecked;
 
+    if ($( '.checkbox:checked').length > 0) {
+      state.view = 'delete';
+    } else {
+      state.view = 'initial';
+    }
 
-    const bookmark = state.bookmarks.find(bookmark => bookmark.id === cuid);
-
-    // grab the id of the item checked, then change the checked value in the store for that item
+    render();
   });
 }
 
