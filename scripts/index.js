@@ -21,7 +21,7 @@ let state = {
 
 const populateState = function () {
 
-  api.getAllBookmarks()
+  return api.getAllBookmarks()
     .then((results) => {
 
       const newState = [];
@@ -33,7 +33,7 @@ const populateState = function () {
           title       : bookmark.title,
           url         : bookmark.url,
           description : bookmark.desc,
-          rating      : bookmark,
+          rating      : bookmark.rating,
           expanded    : false,
           selected    : false,
         });
@@ -122,6 +122,8 @@ const renderDelete = function (filteredState) {
 function handleNewItem(){
   $('.new-bookmark-button').on('submit', function(event){
     event.preventDefault();
+    state.view = 'add';
+    render();
     console.log('New bookmark clicked');
     // update view in store to add view, render
 
@@ -131,8 +133,8 @@ function handleNewItem(){
 function handleRatingFilter(){
   $('.bookmark-rating-form').on('submit', function(event){
     event.preventDefault();
-    const filterRating = $('#bookmark-rating').val();
-    console.log(`Filtering for ${filterRating} stars`);
+    state.minRating = parseInt($('#bookmark-rating').val(), 10);
+    render();
   });
   // update filter in store, render
 }
@@ -153,6 +155,7 @@ function handleSaveBookmark(){
 function handleCancelBookmark(){
   $('.container').on('click', '#cancel-item', function(event){
     event.preventDefault();
+    state.view = 'initial';
     console.log('Canceling Add');
   });
 }
@@ -167,8 +170,16 @@ function handleCancelBookmark(){
 
 function handleCheckbox(){
   $('.bookmarks-list').on('click', '.checkbox', function(){
+    const isChecked = $(event.target).prop('checked');
+    console.log(isChecked);
+    const cuid = $(event.target).closest('li').find('input').data('cuid');
+    const index = state.bookmarks.findIndex(bookmark => bookmark.id === cuid);
+    state.bookmarks[index].selected = isChecked;
+    
+
+    const bookmark = state.bookmarks.find(bookmark => bookmark.id === cuid);
+
     // grab the id of the item checked, then change the checked value in the store for that item
-    console.log('bookmark checked');
   });
 }
 
@@ -183,7 +194,7 @@ function handleViewDetails(){
   $('.bookmarks-list').on('click', '.view-details', function(event){
     event.preventDefault();
     const cuid = $(event.target).closest('li').find('input').data('cuid');
-    const bookmark = state.bookmark.find(bookmark => bookmark.id === cuid);
+    const bookmark = state.bookmarks.find(bookmark => bookmark.id === cuid);
     bookmark.expanded = true;
     console.log('showing details');
     render();
@@ -194,7 +205,7 @@ function handleHideDetails(){
   $('.bookmarks-list').on('click', '.hide-details', function(event){
     event.preventDefault();
     const cuid = $(event.target).closest('li').find('input').data('cuid');
-    const bookmark = state.bookmark.find(bookmark => bookmark.id === cuid);
+    const bookmark = state.bookmarks.find(bookmark => bookmark.id === cuid);
     bookmark.expanded = false;
     console.log('hiding details');
     render();
@@ -202,7 +213,8 @@ function handleHideDetails(){
 }
 
 function main(){
-  render();
+  populateState()
+    .then(render);
   handleNewItem();
   handleRatingFilter();
   handleCheckbox();
