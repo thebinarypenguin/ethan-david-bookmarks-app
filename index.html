@@ -8,30 +8,31 @@
   <link rel="stylesheet" href="styles/index.css">
 </head>
 <body>
-  <main class='container'>
-    <section class="add-bookmark-area" role="region">
-    <div class="error-container">
-      <p>BIG UGLY ERROR</p>
-    </div>
-    <section class="controls flex">
-      <form action="" class="new-bookmark-button">
-        <button class="js-new-item">New</button>
-      </form>
-      <div class="rating-container">
-        <form action="" class="bookmark-rating-form">
-          <label for="bookmark-rating">Rating</label>
-          <select name="" id="bookmark-rating">
-            <option value=""></option>
-            <option value="1">★☆☆☆☆</option>
-            <option value="2">★★☆☆☆</option>
-            <option value="3">★★★☆☆</option>
-            <option value="4">★★★★☆</option>
-            <option value="5">★★★★★</option>
-          </select>
-          <button class="submit-rating">Filter</button>
+  <main class='container' role="main">
+      <section class="controls flex">
+        <form action="" class="new-bookmark-button">
+          <button class="js-new-item">New</button>
         </form>
-      </div>
-    </section>
+        <div class="rating-container">
+          <form action="" class="bookmark-rating-form">
+            <label for="bookmark-rating">Rating</label>
+            <select name="" id="bookmark-rating">
+              <option value=""></option>
+              <option value="1">★☆☆☆☆</option>
+              <option value="2">★★☆☆☆</option>
+              <option value="3">★★★☆☆</option>
+              <option value="4">★★★★☆</option>
+              <option value="5">★★★★★</option>
+            </select>
+            <button class="submit-rating">Filter</button>
+          </form>
+        </div>
+      </section>
+      <section class="add-bookmark-area" role="region">
+      </section>
+    <div class="error-container">
+    </div>
+    <section class="delete-controls flex">
     </section>
     <section class="list">
       <ul class="bookmarks-list">
