@@ -27,7 +27,7 @@ const render = function () {
     break;
 
   case 'delete':
-    renderAdd();
+    renderDelete();
     break;
 
   default:
