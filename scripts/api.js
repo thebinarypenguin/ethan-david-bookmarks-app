@@ -9,7 +9,6 @@ const api = (function() {
     'Content-Type': 'application/json',
   };
 
-
   const getAllBookmarks = function () {
 
     return fetch(BASE_URI, {
