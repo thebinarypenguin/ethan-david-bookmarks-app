@@ -4,6 +4,7 @@
 let state = {
   view: 'initial',
   errors: [],
+  minRating: 0,
   bookmarks: [
     {
       id: 'xxxxxxx',
@@ -46,6 +47,11 @@ const populateState = function () {
 };
 
 const render = function () {
+
+  function filterBookmarks(){
+    const filteredArray = state.bookmarks.filter(bookmark => parseInt(bookmark.rating, 10) >= state.minRating);
+    return filteredArray;
+  }
 
   switch (state.view) {
 
