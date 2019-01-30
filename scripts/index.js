@@ -1,6 +1,58 @@
 'use strict';
 /* global $ */
 
+let state = {
+  view: 'initial',
+  errors: [],
+  bookmarks: [
+    {
+      id: 'xxxxxxx',
+      title: 'AN Example',
+      url: '',
+      description: 'It is an example',
+      rating: 3,
+      expanded: false,
+      selected: false,
+    },
+  ],
+
+};
+
+const render = function () {
+
+  switch (state.view) {
+
+  case 'add':
+    renderAdd();
+    break;
+
+  case 'delete':
+    renderAdd();
+    break;
+
+  default:
+    renderInitial();
+    break;
+  }
+
+};
+
+const renderInitial = function () {
+
+  console.log('Initial View', state);
+};
+
+const renderAdd = function () {
+
+  console.log('Add View', state);
+};
+
+const renderDelete = function () {
+
+  console.log('Delete View', state);
+};
+
+
 function handleNewItem(){
   $('.new-bookmark-button').on('submit', function(event){
     event.preventDefault();
@@ -66,7 +118,7 @@ function expandBookmark(){
 }
 
 function generateAddFormHtml(){
-  
+
 }
 
 
