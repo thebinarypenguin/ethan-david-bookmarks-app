@@ -5,18 +5,7 @@ let state = {
   view: 'initial',
   errors: [],
   minRating: 0,
-  bookmarks: [
-    {
-      id: 'xxxxxxx',
-      title: 'AN Example',
-      url: '',
-      description: 'It is an example',
-      rating: 3,
-      expanded: false,
-      selected: false,
-    },
-  ],
-
+  bookmarks: [],
 };
 
 const populateState = function () {
@@ -76,7 +65,7 @@ const render = function () {
 function generateErrorHtml(errors){
   return errors.map(err => {
     return `<p>${err}</p>`;
-  }).join(''); 
+  }).join('');
 }
 
 
@@ -159,7 +148,7 @@ const renderInitial = function (filteredState) {
 };
 
 const renderAdd = function (filteredState) {
-  
+
   console.log('Add View', filteredState);
 };
 
@@ -217,14 +206,6 @@ function handleCancelBookmark(){
     console.log('Canceling Add');
   });
 }
-
-
-// function handleClickBookmark(){
-//   $('.bookmarks-list').on('click', '.expand', function(event){
-//     event.preventDefault();
-//   });
-// }
-
 
 function handleCheckbox(){
   $('.bookmarks-list').on('click', '.checkbox', function(){
