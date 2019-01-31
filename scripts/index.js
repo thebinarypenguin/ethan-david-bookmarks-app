@@ -8,6 +8,9 @@ let state = {
   bookmarks: [],
 };
 
+const fullStar  = '&starf;';
+const emptyStar = '&star;';
+
 const populateState = function () {
 
   return api.getAllBookmarks()
@@ -70,22 +73,51 @@ function generateErrorHtml(errors){
 
 
 
-function generateListHtml(state){
-  return state.bookmarks.map(bookmark => {
-    return `
-    <li class="bookmark">
-          <div>
-            <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}"><strong>${bookmark.title}</strong>
-          <div>
-          <div class="bookmark-rating">
-              Rating: ${bookmark.rating}
-          </div>
-          <input type="button" class="view-details" value="View details">
-          <div class="description-container">
-          </div>
-        </li>
+function generateListHtml(bookmarks){
+
+  let html = '';
+
+  html += '<section class="list">';
+
+  html += '<ul class="bookmarks-list">';
+
+  html += bookmarks.map(bookmark => {
+
+    let item = '<li>';
+
+    item += `
+      <div>
+        <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}"><strong>${bookmark.title}</strong>
+      </div>
+      <div class="bookmark-rating">
+        ${fullStar.repeat(bookmark.rating) + emptyStar.repeat(5 - bookmark.rating)}
+      </div>
     `;
+
+    if (bookmark.expanded === true) {
+      item += `
+        <input type="button" class="view-details" value="Hide details">
+        <div class="description-container">
+          ${bookmark.description}
+          <a class="fake-button" href="${bookmark.url}">Visit Site</a>
+        </div>
+      `;
+    }  else {
+      item += `
+        <input type="button" class="view-details" value="View details">
+      `;
+    }
+
+    item += '</li>';
+
+    return item;
   }).join('');
+
+  html += '</ul>';
+
+  html += '</section>';
+
+  return html;
 }
 
 function generateExpandedHtml(bookmark){
@@ -143,16 +175,62 @@ function generateDeleteViewHtml(){
 }
 
 const renderInitial = function (filteredState) {
-  $('.bookmarks-list').html(generateListHtml(state.bookmarks));
+
+  let view = '';
+
+  view += `
+    <section class="controls flex">
+      <form action="" class="new-bookmark-button">
+        <button class="js-new-item">New</button>
+      </form>
+      <div class="rating-container">
+        <form action="" class="bookmark-rating-form">
+          <label for="bookmark-rating">Rating</label>
+          <select name="" id="bookmark-rating">
+            <option value=""></option>
+            <option value="1">★☆☆☆☆</option>
+            <option value="2">★★☆☆☆</option>
+            <option value="3">★★★☆☆</option>
+            <option value="4">★★★★☆</option>
+            <option value="5">★★★★★</option>
+          </select>
+          <button class="submit-rating">Filter</button>
+        </form>
+      </div>
+    </section>
+  `;
+
+  if (state.errors.length > 0) {
+
+    view += '<div class="error-container">';
+
+    state.errors.map((msg) => { return `<p>${msg}</p>`; }).join('');
+
+    view += '</div>';
+  }
+
+  view += generateListHtml(filteredState.bookmarks);
+
+  $('main').html(view);
+
+  // $('.bookmarks-list').html(generateListHtml(state.bookmarks));
   console.log('Initial View', filteredState);
 };
 
 const renderAdd = function (filteredState) {
 
+  let view = 'IOU one Add View';
+
+  $('main').html(view);
+
   console.log('Add View', filteredState);
 };
 
 const renderDelete = function (filteredState) {
+
+  let view = 'IOU one Delete View';
+
+  $('main').html(view);
 
   let count = 0;
   filteredState.bookmarks.forEach((b) => {
