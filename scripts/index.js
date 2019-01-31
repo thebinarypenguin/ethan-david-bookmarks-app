@@ -77,9 +77,6 @@ function generateErrorHtml(errors){
   return view;
 }
 
-
-
-
 function generateListHtml(bookmarks){
 
   let html = '';
@@ -112,7 +109,7 @@ function generateListHtml(bookmarks){
 
     if (bookmark.expanded === true) {
       item += `
-        <input type="button" class="view-details" value="Hide details">
+        <input type="button" class="hide-details" value="Hide details">
         <div class="description-container">
           ${bookmark.description}
           <a class="fake-button" href="${bookmark.url}">Visit Site</a>
@@ -136,23 +133,6 @@ function generateListHtml(bookmarks){
   return html;
 }
 
-function generateExpandedHtml(bookmark){
-  return `
-  <li class="bookmark">
-    <div>
-      <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}"><strong>${bookmark.title}</strong>
-    <div>
-    <div class="bookmark-rating">
-        Rating: ${bookmark.rating}
-    </div>
-      <input type="button" class="hide-details" value="Hide details">
-      <p class="bookmark-description">${bookmark.description}</p>
-    <div class="site-link-container flex">
-      <a href="${bookmark.url}" class="fake-button">Visit Site</a>
-    </div>
-  </li>`;
-}
-
 function generateAddViewHtml(){
   return `<form action="" class="new-bookmark-form">
   <div class="flex form-container">
@@ -160,7 +140,7 @@ function generateAddViewHtml(){
       <label for="bookmark-title">Title</label>
       <input type="text" name="title" id="new-bookmark-title">
       <label for="bookmark-name">URL</label>
-      <input type="url" name="url" id="new-bookmark-url">
+      <input type="text" name="url" id="new-bookmark-url">
    </div>
    <div class="right-form">
       <label for="bookmark-title">Description</label>
@@ -183,13 +163,6 @@ function generateAddViewHtml(){
 </form>`;
 }
 
-function generateDeleteViewHtml(){
-  return `<strong>1 item selected</strong>
-  <form action="" class="delete-bookmarks">
-    <button type="submit">Delete</button>
-  </form>`;
-}
-
 const renderInitial = function (filteredState) {
 
   let view = '';
@@ -203,7 +176,7 @@ const renderInitial = function (filteredState) {
         <form action="" class="bookmark-rating-form">
           <label for="bookmark-rating">Rating</label>
           <select name="" id="bookmark-rating">
-            <option value=""></option>
+            <option value="0"></option>
             <option value="1">★☆☆☆☆</option>
             <option value="2">★★☆☆☆</option>
             <option value="3">★★★☆☆</option>
@@ -237,7 +210,7 @@ const renderAdd = function (filteredState) {
 
   let view = '';
 
-  view += ` 
+  view += `
       <section class="controls flex">
         <form action="" class="new-bookmark-button">
         <button class="js-new-item">New</button>
@@ -246,7 +219,7 @@ const renderAdd = function (filteredState) {
         <form action="" class="bookmark-rating-form">
           <label for="bookmark-rating">Rating</label>
           <select name="" id="bookmark-rating">
-            <option value=""></option>
+            <option value="0"></option>
             <option value="1">★☆☆☆☆</option>
             <option value="2">★★☆☆☆</option>
             <option value="3">★★★☆☆</option>
@@ -295,7 +268,7 @@ const renderDelete = function (filteredState) {
       <form action="" class="bookmark-rating-form">
         <label for="bookmark-rating">Rating</label>
         <select name="" id="bookmark-rating">
-          <option value=""></option>
+          <option value="0"></option>
           <option value="1">★☆☆☆☆</option>
           <option value="2">★★☆☆☆</option>
           <option value="3">★★★☆☆</option>
@@ -323,59 +296,78 @@ const renderDelete = function (filteredState) {
 
   $('main').html(view);
 
-  
+
   console.log('Delete View', `${count} selected`, filteredState);
 };
 
 
 function handleNewItem(){
-  $('.new-bookmark-button').on('submit', function(event){
+  $('main').on('submit', '.new-bookmark-button', function(event){
     event.preventDefault();
     state.view = 'add';
     render();
-    console.log('New bookmark clicked');
-    // update view in store to add view, render
-
   });
 }
 
 function handleRatingFilter(){
-  $('.bookmark-rating-form').on('submit', function(event){
+  $('main').on('submit', '.bookmark-rating-form', function(event){
     event.preventDefault();
     state.minRating = parseInt($('#bookmark-rating').val(), 10);
     render();
   });
-  // update filter in store, render
 }
 
 function handleSaveBookmark(){
-  $('.container').on('submit', '.new-bookmark-form', function(event){
+  $('main').on('submit', '.new-bookmark-form', function(event){
     event.preventDefault();
     const title = $('#new-bookmark-title').val();
     const url = $('#new-bookmark-url').val();
-    const description = $('#new-bookmark-descrption').val();
+    const description = $('#new-bookmark-description').val();
     const rating = $('#new-bookmark-rating').val();
 
-    console.log('saving new bookmark');
-    // send POST request to API, then send GET request
+    api.createBookmark({
+      title:  title,
+      url    : url,
+      desc   : description,
+      rating : rating,
+    })
+      .then((bookmark) => {
+        state.bookmarks.push({
+          id          : bookmark.id,
+          title       : bookmark.title,
+          url         : bookmark.url,
+          description : bookmark.desc,
+          rating      : bookmark.rating,
+        });
+
+        state.view = 'initial';
+
+        state.errors = [];
+      })
+      .catch((err) => {
+        state.errors.push(err.message);
+      })
+      .finally(() => {
+        render();
+      });
+
   });
 }
 
 function handleCancelBookmark(){
-  $('.container').on('click', '#cancel-item', function(event){
+  $('main').on('click', '#cancel-item', function(event){
     event.preventDefault();
     state.view = 'initial';
-    console.log('Canceling Add');
+    render();
   });
 }
 
 function handleCheckbox(){
   $('main').on('click', '.checkbox', function(){
-    console.log('hiiii Ethan');
     const isChecked = $(event.target).prop('checked');
     const cuid = $(event.target).closest('li').find('input').data('cuid');
     const index = state.bookmarks.findIndex(bookmark => bookmark.id === cuid);
-    console.log(`${cuid} and ${index}`);
+
     state.bookmarks[index].selected = isChecked;
 
     if ($( '.checkbox:checked').length > 0) {
@@ -389,30 +381,32 @@ function handleCheckbox(){
 }
 
 function handleDelete(){
-  $('.delete-bookmarks').on('submit', function(event){
+  $('main').on('submit', '.delete-bookmarks', function(event){
     event.preventDefault();
     console.log('deleting a bunch');
+
+    // get ids of selected bookmakrs
+    // loop
+      // api.destroyBookmark(id)
   });
 }
 
 function handleViewDetails(){
-  $('.bookmarks-list').on('click', '.view-details', function(event){
+  $('main').on('click', '.view-details', function(event){
     event.preventDefault();
     const cuid = $(event.target).closest('li').find('input').data('cuid');
     const bookmark = state.bookmarks.find(bookmark => bookmark.id === cuid);
     bookmark.expanded = true;
-    console.log('showing details');
     render();
   });
 }
 
 function handleHideDetails(){
-  $('.bookmarks-list').on('click', '.hide-details', function(event){
+  $('main').on('click', '.hide-details', function(event){
     event.preventDefault();
     const cuid = $(event.target).closest('li').find('input').data('cuid');
     const bookmark = state.bookmarks.find(bookmark => bookmark.id === cuid);
     bookmark.expanded = false;
-    console.log('hiding details');
     render();
   });
 }
