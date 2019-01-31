@@ -193,7 +193,7 @@ const renderInitial = function (filteredState) {
 
     view += '<div class="error-container">';
 
-    state.errors.map((msg) => { return `<p>${msg}</p>`; }).join('');
+    view += state.errors.map((msg) => { return `<p>${msg}</p>`; }).join('');
 
     view += '</div>';
   }
@@ -383,11 +383,39 @@ function handleCheckbox(){
 function handleDelete(){
   $('main').on('submit', '.delete-bookmarks', function(event){
     event.preventDefault();
-    console.log('deleting a bunch');
 
-    // get ids of selected bookmakrs
-    // loop
-      // api.destroyBookmark(id)
+    const selectedBookmarks = state.bookmarks.filter((b) => {
+      return b.selected === true;
+    });
+
+    const loop = selectedBookmarks.reduce((prevPromise, bookmark, i) => {
+
+      return prevPromise.finally(() => {
+
+        return api.destroyBookmark(bookmark.id + '-invalid')
+          .then((body) => {
+            console.log(`Promise #${i} resolved,`, bookmark.title, bookmark.id);
+            const deletedIndex = state.bookmarks.findIndex((mark) => { return mark.id === bookmark.id; });
+            console.log(`Deleteing index ${deletedIndex}`);
+            const ded = state.bookmarks.splice(deletedIndex, 1);
+            console.log(`Spliced out items ${ded}`);
+          })
+          .catch((err) => {
+            console.log(`Promise #${i} rejected,`, err);
+            state.errors.push(err.message);
+          });
+
+      });
+
+    }, Promise.resolve());
+
+
+    loop.finally((data) => {
+      console.log('finally', data);
+      state.view = 'initial';
+      render();
+    });
+
   });
 }
 
