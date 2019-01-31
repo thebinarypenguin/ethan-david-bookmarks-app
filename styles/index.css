@@ -2,19 +2,58 @@
   box-sizing: border-box;
 }
 
+html{
+  background-color: rgba(93, 90, 168, 0.74);
+  
+}
+
+body
+
+{
+  padding-top: 1rem;
+}
+
+main{
+  background-color: #f9f9fa;
+  border-radius: 6px;
+}
+
+
+
+input{
+  border-radius: 3px;
+  border: solid black 1px;
+  border-style: solid;
+}
+
+textarea{
+  border-radius: 3px;
+  border: solid black 1px;
+}
+
 button{
   border-radius: 3px;
   border-style: none;
 }
 
 .js-new-item, .submit-rating{
-  width: 6rem;
+  width: 4rem;
   height: 2rem;
+}
+
+.js-new-item{
+  margin-left: 2rem;
 }
 
 #cancel-item{
   border-radius: 3px;
   border-style: none;
+  width: 5rem;
+  height: 2rem;
+}
+
+#save-item{
+  width: 5rem;
 }
 
 #bookmark-rating{
@@ -48,7 +87,7 @@ button{
 ul{
   list-style-type: none;
   padding-left: 0px;
-  padding-top: 2rem;
+  padding-bottom: 1rem;
 }
 
 li{
@@ -61,8 +100,9 @@ li{
   padding-right: 2rem;
 }
 
-.new-bookmark-button{
+#new-bookmark-rating{
   padding-left: 2rem;
+  border-radius: 3px;
 }
 
 p{
@@ -83,6 +123,12 @@ p{
   flex-direction: row-reverse;
 }
 
+.error-container p{
+  background-color: #FFD2D8;
+  margin: 1rem 2rem;
+  border-radius: 3px;
+}
+
 .bookmark-description, .bookmark-rating{
   padding-left: 2rem;
 }
@@ -96,7 +142,8 @@ textarea{
 }
 
 .left-form, .right-form{
-  padding: 1rem;
+  padding: 0.25rem 2rem;
+  padding-top: 0;
 }
 
 .left-form input, left-form label{
@@ -119,7 +166,7 @@ textarea{
 }
 
 .error-container, .container, .new-bookmark-form{
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 .new-bookmark-form{
@@ -131,8 +178,44 @@ textarea{
   height: 1.5rem;
 }
 
+.delete-controls button{
+  color: #383d41;
+  background-color: #e2e3e5;
+  border: 1px solid;
+  border-color: #d6d8db;
+}
+
 .delete-controls{
   justify-content: space-between;
   margin: 1rem;
   margin-bottom: 0;
+  color: #004085;
+  background-color: #cce5ff;
+  border-radius: 3px;
+  border-color: #b8daff;
+  padding: .75rem 1.25rem;
+}
+
+@media (max-width: 720px){
+
+  /* styles for mobile users */
+
+html{
+  background-color: #f9f9fa;
+}
+
+.js-new-item{
+  margin-left: .2rem;
+}
+
+.bookmark-rating-form{
+  padding-right: .2rem;
+}
+
+.left-form, .right-form {
+  padding: 0.2rem;
+  padding-top: 0;
+}
+
+    
 }
