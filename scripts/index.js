@@ -392,7 +392,7 @@ function handleDelete(){
 
       return prevPromise.finally(() => {
 
-        return api.destroyBookmark(bookmark.id + '-invalid')
+        return api.destroyBookmark(bookmark.id)
           .then((body) => {
             console.log(`Promise #${i} resolved,`, bookmark.title, bookmark.id);
             const deletedIndex = state.bookmarks.findIndex((mark) => { return mark.id === bookmark.id; });
