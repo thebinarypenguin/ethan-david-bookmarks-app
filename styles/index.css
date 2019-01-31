@@ -181,10 +181,6 @@ textarea{
   margin: 0 .5rem;
 }
 
-.error-container, .container, .new-bookmark-form{
-  /* border: 1px solid black; */
-}
-
 .new-bookmark-form{
   margin: 3px;
 }
