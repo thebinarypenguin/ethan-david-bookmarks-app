@@ -224,7 +224,8 @@ const state = (function () {
       if (bookmark.selected === true){
         item += `
         <div>
-          <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}" checked><strong>${bookmark.title}</strong>
+          <input type="checkbox" id="bookmark-${bookmark.id}" class='checkbox' data-cuid="${bookmark.id}" checked>
+          <label for="bookmark-${bookmark.id}"><strong>${bookmark.title}</strong></label>
         </div>
         <div class="bookmark-rating">
           ${fullStar.repeat(bookmark.rating) + emptyStar.repeat(5 - bookmark.rating)}
@@ -232,7 +233,8 @@ const state = (function () {
       } else {
         item += `
         <div>
-          <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}"><strong>${bookmark.title}</strong>
+          <input type="checkbox" id="bookmark-${bookmark.id}" class='checkbox' data-cuid="${bookmark.id}">
+          <label for="bookmark-${bookmark.id}"><strong>${bookmark.title}</strong></label>
         </div>
         <div class="bookmark-rating">
           ${fullStar.repeat(bookmark.rating) + emptyStar.repeat(5 - bookmark.rating)}
