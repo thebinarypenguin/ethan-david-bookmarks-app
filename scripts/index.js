@@ -345,6 +345,7 @@ function handleSaveBookmark(){
         state.errors = [];
       })
       .catch((err) => {
+        state.errors = [];
         state.errors.push(err.message);
       })
       .finally(() => {
@@ -357,6 +358,7 @@ function handleSaveBookmark(){
 function handleCancelBookmark(){
   $('main').on('click', '#cancel-item', function(event){
     event.preventDefault();
+    state.errors = [];
     state.view = 'initial';
     render();
   });
@@ -445,7 +447,6 @@ function main(){
   handleNewItem();
   handleRatingFilter();
   handleCheckbox();
-  // handleClickBookmark();
   handleDelete();
   handleSaveBookmark();
   handleCancelBookmark();
