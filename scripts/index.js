@@ -66,10 +66,17 @@ const render = function () {
 };
 
 function generateErrorHtml(errors){
-  return errors.map(err => {
-    return `<p>${err}</p>`;
+
+  let view = '<section class="error-container">';
+
+  view += errors.map(err => {
+    return `<p class = "error message" aria-role="error-message">${err}</p>`;
   }).join('');
+
+  view += '</section>';
+  return view;
 }
+
 
 
 
@@ -85,14 +92,23 @@ function generateListHtml(bookmarks){
 
     let item = '<li>';
 
-    item += `
+    if (bookmark.selected === true){
+      item += `
+      <div>
+        <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}" checked><strong>${bookmark.title}</strong>
+      </div>
+      <div class="bookmark-rating">
+        ${fullStar.repeat(bookmark.rating) + emptyStar.repeat(5 - bookmark.rating)}
+      </div>`;
+    } else {
+      item += `
       <div>
         <input type="checkbox" class='checkbox' data-cuid="${bookmark.id}"><strong>${bookmark.title}</strong>
       </div>
       <div class="bookmark-rating">
         ${fullStar.repeat(bookmark.rating) + emptyStar.repeat(5 - bookmark.rating)}
-      </div>
-    `;
+      </div>`;
+    }
 
     if (bookmark.expanded === true) {
       item += `
@@ -219,7 +235,36 @@ const renderInitial = function (filteredState) {
 
 const renderAdd = function (filteredState) {
 
-  let view = 'IOU one Add View';
+  let view = '';
+
+  view += ` 
+      <section class="controls flex">
+        <form action="" class="new-bookmark-button">
+        <button class="js-new-item">New</button>
+      </form>
+      <div class="rating-container">
+        <form action="" class="bookmark-rating-form">
+          <label for="bookmark-rating">Rating</label>
+          <select name="" id="bookmark-rating">
+            <option value=""></option>
+            <option value="1">★☆☆☆☆</option>
+            <option value="2">★★☆☆☆</option>
+            <option value="3">★★★☆☆</option>
+            <option value="4">★★★★☆</option>
+            <option value="5">★★★★★</option>
+          </select>
+          <button class="submit-rating">Filter</button>
+        </form>
+      </div>
+      </section>`;
+
+  view += generateErrorHtml(filteredState.errors);
+
+
+  view += generateAddViewHtml();
+
+
+  view += generateListHtml(filteredState.bookmarks);
 
   $('main').html(view);
 
@@ -228,11 +273,8 @@ const renderAdd = function (filteredState) {
 
 const renderDelete = function (filteredState) {
 
-  let view = 'IOU one Delete View';
-
-  $('main').html(view);
-
   let count = 0;
+
   filteredState.bookmarks.forEach((b) => {
 
     if (b.selected === true) {
@@ -240,6 +282,48 @@ const renderDelete = function (filteredState) {
     }
   });
 
+  const countString = count === 1 ? `${count} item selected` : `${count} items selected`;
+
+  let view = '';
+
+  view += `
+  <section class="controls flex">
+    <form action="" class="new-bookmark-button">
+      <button class="js-new-item">New</button>
+    </form>
+    <div class="rating-container">
+      <form action="" class="bookmark-rating-form">
+        <label for="bookmark-rating">Rating</label>
+        <select name="" id="bookmark-rating">
+          <option value=""></option>
+          <option value="1">★☆☆☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="4">★★★★☆</option>
+          <option value="5">★★★★★</option>
+        </select>
+        <button class="submit-rating">Filter</button>
+      </form>
+    </div>
+  </section>
+`;
+
+  view += generateErrorHtml(filteredState.errors);
+
+  view += '<section class="delete-controls flex">';
+
+  view += countString;
+
+  view += `<form action="" class="delete-bookmarks">
+    <button type="submit">Delete</button>
+  </form>
+</section>`;
+
+  view += generateListHtml(filteredState.bookmarks);
+
+  $('main').html(view);
+
+  
   console.log('Delete View', `${count} selected`, filteredState);
 };
 
@@ -286,11 +370,12 @@ function handleCancelBookmark(){
 }
 
 function handleCheckbox(){
-  $('.bookmarks-list').on('click', '.checkbox', function(){
+  $('main').on('click', '.checkbox', function(){
+    console.log('hiiii Ethan');
     const isChecked = $(event.target).prop('checked');
     const cuid = $(event.target).closest('li').find('input').data('cuid');
     const index = state.bookmarks.findIndex(bookmark => bookmark.id === cuid);
-
+    console.log(`${cuid} and ${index}`);
     state.bookmarks[index].selected = isChecked;
 
     if ($( '.checkbox:checked').length > 0) {
