@@ -36,13 +36,31 @@ const state = (function () {
 
   const render = function () {
 
-    const filteredState = {
-      view      : state.view,
-      errors    : state.errors,
-      minRating : state.minRating,
-      bookmarks : state.bookmarks.filter(bookmark => parseInt(bookmark.rating, 10) >= state.minRating),
+    const getFilteredState = function (state) {
+
+      const filtered = {
+        view      : state.view,
+        errors    : state.errors,
+        minRating : state.minRating,
+      };
+
+      filtered.bookmarks = state.bookmarks.filter((bookmark) => {
+
+        if (state.minRating === 0) {
+          return true;
+        }
+
+        if (parseInt(bookmark.rating, 10) >= state.minRating) {
+          return true;
+        }
+
+        return false;
+      });
+
+      return filtered;
     };
 
+    const filteredState = getFilteredState(state);
 
     switch (state.view) {
 

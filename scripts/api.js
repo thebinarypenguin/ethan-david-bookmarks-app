@@ -5,6 +5,65 @@ const api = (function() {
   const USER_NAME = 'ethan';
   const BASE_URI  = `https://thinkful-list-api.herokuapp.com/${USER_NAME}/bookmarks`;
 
+  const validateBody = function (input) {
+
+    const validInput = {};
+
+    const keys = Object.keys(input);
+
+    for (let k = 0; k < keys.length; k++) {
+
+      switch (keys[k]) {
+
+      case 'id':
+        if (input.id) {
+          validInput.id = input.id;
+        }
+        break;
+
+      case 'title':
+        if (input.title) {
+          validInput.title = input.title;
+        }
+        break;
+
+      case 'url':
+        if (input.url) {
+          validInput.url = input.url;
+        }
+        break;
+
+      case 'desc':
+        if (input.desc) {
+          validInput.desc = input.desc;
+        }
+        break;
+
+      case 'description':
+        if (input.description) {
+          validInput.desc = input.description;
+        }
+        break;
+
+      case 'rating':
+
+        const num = Number.parseInt(input.rating, 10);
+
+        if (num >= 1 && num <= 5) {
+          validInput.rating = num;
+        }
+        break;
+
+      default:
+        // do nothing
+        break;
+      }
+    }
+
+    console.log(input, validInput);
+    return validInput;
+  };
+
   const request = function (uri, options) {
 
     const defaultOptions = {
@@ -55,7 +114,7 @@ const api = (function() {
 
     return request(BASE_URI, {
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(validateBody(data))
     });
   };
 
@@ -65,7 +124,7 @@ const api = (function() {
 
     return request(`${BASE_URI}/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify(data),
+      body: JSON.stringify(validateBody(data)),
     });
   };
 
