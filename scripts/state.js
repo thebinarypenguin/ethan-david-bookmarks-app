@@ -264,7 +264,7 @@ const state = (function () {
           <input type="button" class="hide-details" value="Hide details">
           <div class="description-container">
             ${bookmark.description}
-            <a class="fake-button" href="${bookmark.url}">Visit Site</a>
+            <a class="fake-button make-button" href="${bookmark.url}" target="_blank">Visit Site</a>
           </div>
         `;
       }  else {
