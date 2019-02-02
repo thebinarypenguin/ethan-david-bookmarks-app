@@ -263,7 +263,7 @@ const state = (function () {
         item += `
           <input type="button" class="hide-details" value="Hide details">
           <div class="description-container">
-            ${bookmark.description}
+            ${ bookmark.description || '' }
             <a class="fake-button make-button" href="${bookmark.url}" target="_blank">Visit Site</a>
           </div>
         `;
